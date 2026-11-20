@@ -9,6 +9,7 @@
 use base64::engine::general_purpose::{STANDARD, STANDARD_NO_PAD, URL_SAFE, URL_SAFE_NO_PAD};
 use base64::Engine as _;
 use percent_encoding::{percent_decode_str, utf8_percent_encode, NON_ALPHANUMERIC};
+use uuid::Uuid;
 
 #[derive(Clone, Copy, Debug, PartialEq, Eq)]
 pub enum Transform {
@@ -21,15 +22,24 @@ pub enum Transform {
 	Uppercase,
 	Lowercase,
 	Reverse,
+	JsonPrettify,
+	JsonMinify,
+	Base64UrlEncode,
+	Base64UrlDecode,
+	Uuid,
+	LoremIpsum,
 }
 
 impl Transform {
 	/// Groups of buttons, rendered as one column each in the UI.
 	pub const GROUPS: &'static [(&'static str, &'static [Transform])] = &[
-		("Base64", &[Self::Base64Encode, Self::Base64Decode]),
-		("URL", &[Self::UrlEncode, Self::UrlDecode]),
-		("Hex", &[Self::HexEncode, Self::HexDecode]),
 		("Text", &[Self::Uppercase, Self::Lowercase, Self::Reverse]),
+		("JSON", &[Self::JsonPrettify, Self::JsonMinify]),
+		("Hex", &[Self::HexEncode, Self::HexDecode]),
+		("URL", &[Self::UrlEncode, Self::UrlDecode]),
+		("Base64", &[Self::Base64Encode, Self::Base64Decode]),
+		("Base64URL", &[Self::Base64UrlEncode, Self::Base64UrlDecode]),
+		("Generate", &[Self::Uuid, Self::LoremIpsum]),
 	];
 
 	/// Short text shown on the button. The group label supplies the context.
@@ -40,6 +50,12 @@ impl Transform {
 			Self::Uppercase => "UPPERCASE",
 			Self::Lowercase => "lowercase",
 			Self::Reverse => "Reverse",
+			Self::JsonPrettify => "Prettify",
+			Self::JsonMinify => "Minify",
+			Self::Base64UrlEncode => "Encode",
+			Self::Base64UrlDecode => "Decode",
+			Self::Uuid => "UUID",
+			Self::LoremIpsum => "Lorem ipsum",
 		}
 	}
 
@@ -55,6 +71,12 @@ impl Transform {
 			Self::Uppercase => "Uppercase",
 			Self::Lowercase => "Lowercase",
 			Self::Reverse => "Reverse",
+			Self::JsonPrettify => "JSON prettify",
+			Self::JsonMinify => "JSON minify",
+			Self::Base64UrlEncode => "Base64URL encode",
+			Self::Base64UrlDecode => "Base64URL decode",
+			Self::Uuid => "UUID",
+			Self::LoremIpsum => "Lorem ipsum",
 		}
 	}
 
@@ -75,6 +97,12 @@ impl Transform {
 			Self::Uppercase => Ok(input.to_uppercase()),
 			Self::Lowercase => Ok(input.to_lowercase()),
 			Self::Reverse => Ok(input.chars().rev().collect()),
+			Self::JsonPrettify => prettify_json(input),
+			Self::JsonMinify => minify_json(input),
+			Self::Base64UrlEncode => Ok(URL_SAFE.encode(input.as_bytes())),
+			Self::Base64UrlDecode => decode_base64(input),
+			Self::Uuid => Ok(Uuid::new_v4().to_string()),
+			Self::LoremIpsum => Ok(LOREM_IPSUM.to_owned()),
 		}
 	}
 }
@@ -94,6 +122,24 @@ fn decode_base64(input: &str) -> Result<String, String> {
 
 	String::from_utf8(bytes).map_err(|_| "decoded bytes are not valid UTF-8 text".to_owned())
 }
+
+fn prettify_json(input: &str) -> Result<String, String> {
+	let value: serde_json::Value = (
+		serde_json::from_str(input).map_err(|err| format!("invalid JSON: {err}"))?
+	);
+
+	serde_json::to_string_pretty(&value).map_err(|err| format!("could not format JSON: {err}"))
+}
+
+fn minify_json(input: &str) -> Result<String, String> {
+	let value: serde_json::Value = (
+		serde_json::from_str(input).map_err(|err| format!("invalid JSON: {err}"))?
+	);
+
+	serde_json::to_string(&value).map_err(|err| format!("could not format JSON: {err}"))
+}
+
+const LOREM_IPSUM: &str = "Lorem ipsum dolor sit amet, consectetur adipiscing elit. Sed non risus. Suspendisse lectus tortor, dignissim sit amet, adipiscing nec, ultricies sed, dolor. Cras elementum ultrices diam. Maecenas ligula massa, varius a, semper congue, euismod non, mi. Proin porttitor, orci nec nonummy molestie, enim est eleifend mi, non fermentum diam nisl sit amet erat. Duis semper. Duis arcu massa, scelerisque vitae, consequat in, pretium a, enim. Pellentesque congue. Ut in risus volutpat libero pharetra tempor. Cras vestibulum bibendum augue. Praesent egestas leo in pede. Praesent blandit odio eu enim. Pellentesque sed dui ut augue blandit sodales. Vestibulum ante ipsum primis in faucibus orci luctus et ultrices posuere cubilia Curae; Aliquam nibh. Mauris ac mauris sed pede pellentesque fermentum. Maecenas adipiscing ante non diam sodales hendrerit.\n\nUt velit mauris, egestas sed, gravida nec, ornare ut, mi. Aenean ut orci vel massa suscipit pulvinar. Nulla sollicitudin. Fusce varius, ligula non tempus aliquam, nunc turpis ullamcorper nibh, in tempus sapien eros vitae ligula. Pellentesque rhoncus nunc et augue. Integer id felis. Curabitur aliquet pellentesque diam. Integer quis metus vitae elit lobortis egestas. Lorem ipsum dolor sit amet, consectetuer adipiscing elit. Morbi vel erat non mauris convallis vehicula. Nulla et sapien. Integer tortor tellus, aliquam faucibus, convallis id, congue eu, quam. Mauris ullamcorper felis vitae erat. Proin feugiat, augue non elementum posuere, metus purus iaculis lectus, et tristique ligula justo vitae magna.\n\nAliquam convallis sollicitudin purus. Praesent aliquam, enim at fermentum mollis, ligula massa adipiscing nisl, ac euismod nibh nisl eu lectus. Fusce vulputate sem at sapien. Vivamus leo. Aliquam euismod libero eu enim. Nulla nec felis sed leo placerat imperdiet. Aenean suscipit nulla in justo. Suspendisse cursus rutrum augue. Nulla tincidunt tincidunt mi. Curabitur iaculis, lorem vel rhoncus faucibus, felis magna fermentum augue, et ultricies lacus lorem varius purus. Curabitur eu amet.";
 
 fn encode_hex(input: &str) -> String {
 	use std::fmt::Write as _;
@@ -209,5 +255,52 @@ mod tests {
 	#[test]
 	fn reverse_handles_unicode() {
 		assert_eq!(Transform::Reverse.apply("abc🦀").unwrap(), "🦀cba");
+	}
+
+	#[test]
+	fn json_prettify_and_minify() {
+		let compact = "{\"b\":2,\"a\":[1,true]}";
+		let pretty = Transform::JsonPrettify.apply(compact).unwrap();
+		assert_eq!(
+			pretty,
+			"{\n  \"b\": 2,\n  \"a\": [\n    1,\n    true\n  ]\n}",
+		);
+		assert_eq!(Transform::JsonMinify.apply(&pretty).unwrap(), compact);
+	}
+
+	#[test]
+	fn json_rejects_invalid_input() {
+		assert!(Transform::JsonPrettify.apply("{not json}").is_err());
+		assert!(Transform::JsonMinify.apply("{not json}").is_err());
+	}
+
+	#[test]
+	fn base64url_known_vector() {
+		assert_eq!(Transform::Base64Encode.apply("🦀").unwrap(), "8J+mgA==");
+		assert_eq!(Transform::Base64UrlEncode.apply("🦀").unwrap(), "8J-mgA==");
+		assert_eq!(Transform::Base64UrlDecode.apply("8J-mgA==").unwrap(), "🦀");
+	}
+
+	#[test]
+	fn base64url_roundtrips_unicode() {
+		roundtrip(
+			Transform::Base64UrlEncode,
+			Transform::Base64UrlDecode,
+			"héllo 世界 🦀\nsecond line",
+		);
+	}
+
+	#[test]
+	fn uuid_is_valid() {
+		let uuid = Transform::Uuid.apply("ignored").unwrap();
+		assert_eq!(uuid.len(), 36);
+		assert!(uuid::Uuid::parse_str(&uuid).is_ok());
+	}
+
+	#[test]
+	fn lorem_ipsum_generates_text() {
+		let text = Transform::LoremIpsum.apply("ignored").unwrap();
+		assert!(text.starts_with("Lorem ipsum"));
+		assert!(text.len() > 100);
 	}
 }

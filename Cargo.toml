@@ -9,6 +9,8 @@ description = "A tiny egui app that transforms text"
 base64 = "0.22"
 eframe = "0.37"
 percent-encoding = "2"
+serde_json = { version = "1", features = ["preserve_order"] }
+uuid = { version = "1", features = ["v4"] }
 
 [profile.release]
 opt-level = 2

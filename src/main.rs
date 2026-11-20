@@ -11,7 +11,7 @@ fn main() -> eframe::Result<()> {
 			egui::ViewportBuilder::default()
 			. with_title("Text to Text")
 			. with_inner_size([920.0, 800.0])
-			. with_min_inner_size([560.0, 520.0])
+			. with_min_inner_size([680.0, 520.0])
 		),
 		..Default::default()
 	};
