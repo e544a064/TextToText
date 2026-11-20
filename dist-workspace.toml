@@ -10,8 +10,6 @@ cargo-dist-version = "0.34.0"
 ci = "github"
 # The installers to generate for each app
 installers = []
-# Extra static files to include in each App (path relative to this Cargo.toml's dir)
-include = ["THIRD_PARTY_LICENSES.md"]
 # Whether to auto-include files like READMEs, LICENSEs, and CHANGELOGs (default true)
 auto-includes = true
 # The archive format to use for non-windows builds (defaults .tar.xz)
