@@ -1,0 +1,17 @@
+[package]
+name = "text-to-text"
+version = "0.1.0"
+edition = "2021"
+rust-version = "1.95"
+description = "A tiny egui app that transforms text"
+
+[dependencies]
+base64 = "0.22"
+eframe = "0.37"
+percent-encoding = "2"
+
+[profile.release]
+opt-level = 2
+
+[lints.rust]
+unused_parens = "allow"
