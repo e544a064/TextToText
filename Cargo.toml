@@ -6,6 +6,7 @@ rust-version = "1.95"
 description = "A tiny egui app that transforms text"
 license = "GPL-3.0-only"
 publish = false
+repository = "https://github.com/e544a064/TextToText"
 
 [dependencies]
 base64 = "0.22"
@@ -14,8 +15,15 @@ percent-encoding = "2"
 serde_json = { version = "1", features = ["preserve_order"] }
 uuid = { version = "1", features = ["v4"] }
 
+[package.metadata.dist]
+dist = true
+
 [profile.release]
 opt-level = 2
+
+[profile.dist]
+inherits = "release"
+lto = "thin"
 
 [lints.rust]
 unused_parens = "allow"
