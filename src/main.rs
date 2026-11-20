@@ -83,6 +83,23 @@ impl TextToTextApp {
 		};
 	}
 
+	fn status_panel(&mut self, ui: &mut egui::Ui) {
+		egui::Panel::bottom("status_panel")
+		. show_separator_line(false)
+		. show(ui, |ui| {
+			let color = if self.status.is_error {
+				ui.visuals().error_fg_color
+			} else {
+				ui.visuals().weak_text_color()
+			};
+			ui.label(
+				egui::RichText::new(&self.status.message)
+				. small()
+				. color(color),
+			);
+		});
+	}
+
 	fn input_panel(&mut self, ui: &mut egui::Ui) {
 		// Reserve space for the fixed controls row and a usable output box.
 		let max_input_height = (ui.available_height() - 300.0).max(110.0);
@@ -195,25 +212,13 @@ impl TextToTextApp {
 					ui.end_row();
 				}
 			});
-
-			ui.add_space(4.0);
-
-			let color = if self.status.is_error {
-				ui.visuals().error_fg_color
-			} else {
-				ui.visuals().weak_text_color()
-			};
-			ui.label(
-				egui::RichText::new(&self.status.message)
-				. small()
-				. color(color),
-			);
 		});
 	}
 }
 
 impl eframe::App for TextToTextApp {
 	fn ui(&mut self, ui: &mut egui::Ui, _frame: &mut eframe::Frame) {
+		self.status_panel(ui);
 		self.input_panel(ui);
 		self.controls_panel(ui);
 		self.output_panel(ui);
