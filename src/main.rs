@@ -94,9 +94,10 @@ impl TextToTextApp {
 			};
 			ui.label(
 				egui::RichText::new(&self.status.message)
-				. small()
+				. size(16.0)
 				. color(color),
 			);
+			ui.add_space(6.0);
 		});
 	}
 
