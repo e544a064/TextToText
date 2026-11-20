@@ -104,3 +104,7 @@ Ship `THIRD-PARTY-NOTICES.md` and `LICENSE` with binary releases.
 ## License
 
 GPL-3.0-only — see [LICENSE](LICENSE).
+
+## AI use disclosure
+
+This project was coded with the assistance of AI. As you can tell from the non-standard coding style though, I definitely do not deliver code that does not meet my standards. If you do not want anything to do with AI though, I inform you that you would probably not like this project.
