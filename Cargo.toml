@@ -4,6 +4,8 @@ version = "0.1.0"
 edition = "2021"
 rust-version = "1.95"
 description = "A tiny egui app that transforms text"
+license = "GPL-3.0-only"
+publish = false
 
 [dependencies]
 base64 = "0.22"

@@ -53,11 +53,14 @@ is written to `target/release/text-to-text` (`text-to-text.exe` on Windows).
 
 ```
 Cargo.toml
+about.toml            cargo-about configuration
+about.hbs             template for the third-party notices
 src/
-  main.rs       App state, window layout, panels, and widgets
-  transform.rs  Transform enum, transformation logic, unit tests
+  main.rs             App state, window layout, panels, and widgets
+  transform.rs        Transform enum, transformation logic, unit tests
 assets/
   screenshot.png
+THIRD-PARTY-NOTICES.md  generated dependency licenses
 ```
 
 ## Adding a transformation
@@ -81,6 +84,23 @@ cargo test
 The 16 unit tests cover the transformations, including Unicode round-trips and
 error cases.
 
+## Third-party notices
+
+Every dependency is permissively licensed (MIT, Apache-2.0, BSD, ISC, Zlib,
+Unicode, and similar), which is compatible with GPL-3.0. `THIRD-PARTY-NOTICES.md`
+lists each crate with its version and license and reproduces the full license
+texts, including those for the fonts embedded by egui.
+
+The file is generated with [cargo-about](https://github.com/EmbarkStudios/cargo-about).
+Regenerate it whenever dependencies change:
+
+```sh
+cargo install --locked --features cli cargo-about
+cargo about generate --locked --fail -o THIRD-PARTY-NOTICES.md about.hbs
+```
+
+Ship `THIRD-PARTY-NOTICES.md` and `LICENSE` with binary releases.
+
 ## License
 
-GPL-3.0 — see [LICENSE](LICENSE).
+GPL-3.0-only — see [LICENSE](LICENSE).

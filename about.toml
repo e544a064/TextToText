@@ -1,0 +1,31 @@
+# Configuration for `cargo about generate`.
+#
+# Every license that appears in the dependency graph must be listed in
+# `accepted`; cargo-about fails if a crate uses a license that is not covered,
+# which is how a newly introduced license gets noticed. The order matters only
+# when a crate offers a choice: earlier entries are preferred.
+accepted = [
+	"MIT",
+	"Apache-2.0",
+	"BSD-2-Clause",
+	"BSD-3-Clause",
+	"ISC",
+	"Zlib",
+	"BSL-1.0",
+	"0BSD",
+	"Unlicense",
+	"Unicode-3.0",
+	"OFL-1.1",
+	"Ubuntu-font-1.0",
+]
+
+# This is an application, not a library: keep it out of the notices.
+private = { ignore = true }
+
+# Desktop platforms the app can be built for. Listing all of them keeps the
+# generated notices complete no matter which binary is shipped.
+targets = [
+	"x86_64-pc-windows-msvc",
+	"x86_64-unknown-linux-gnu",
+	"x86_64-apple-darwin",
+]
