@@ -100,6 +100,10 @@ impl TextToTextApp {
 					if ui.button("Clear").clicked() {
 						self.input.clear();
 					}
+					if ui.button("Swap input/output").clicked() {
+						std::mem::swap(&mut self.input, &mut self.output);
+						self.set_status("Swapped input and output.");
+					}
 				});
 			});
 
@@ -125,12 +129,12 @@ impl TextToTextApp {
 				ui.strong("Output");
 				ui.weak(format!("{} characters", self.output.chars().count()));
 				ui.with_layout(egui::Layout::right_to_left(egui::Align::Center), |ui| {
+					if ui.button("Clear").clicked() {
+						self.output.clear();
+					}
 					if ui.button("Copy").clicked() {
 						ui.ctx().copy_text(self.output.clone());
 						self.set_status("Copied output to the clipboard.");
-					}
-					if ui.button("Clear").clicked() {
-						self.output.clear();
 					}
 				});
 			});
@@ -192,19 +196,8 @@ impl TextToTextApp {
 				}
 			});
 
-			ui.add_space(6.0);
-			ui.horizontal(|ui| {
-				if ui.button("Swap input/output").clicked() {
-					std::mem::swap(&mut self.input, &mut self.output);
-					self.set_status("Swapped input and output.");
-				}
-				if ui.button("Copy output").clicked() {
-					ui.ctx().copy_text(self.output.clone());
-					self.set_status("Copied output to the clipboard.");
-				}
-			});
-
 			ui.add_space(4.0);
+
 			let color = if self.status.is_error {
 				ui.visuals().error_fg_color
 			} else {
