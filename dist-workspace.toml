@@ -12,6 +12,10 @@ ci = "github"
 installers = []
 # Whether to auto-include files like READMEs, LICENSEs, and CHANGELOGs (default true)
 auto-includes = true
+# Extra files copied to the root of every archive. README.md and LICENSE are
+# found automatically; the generated notices and the bundled font licenses are
+# not, so list them explicitly. Paths are relative to this file.
+include = ["THIRD-PARTY-NOTICES.md", "licenses/"]
 # The archive format to use for non-windows builds (defaults .tar.xz)
 unix-archive = ".tar.gz"
 # Target platforms to build apps for (Rust target-triple syntax)

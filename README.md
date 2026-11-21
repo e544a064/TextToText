@@ -62,6 +62,7 @@ src/
 assets/
   icon.png            the single source image for the app icon
   screenshot.png
+licenses/fonts/       font licenses shipped with release archives
 THIRD-PARTY-NOTICES.md  generated dependency licenses
 ```
 
@@ -112,7 +113,10 @@ cargo install --locked --features cli cargo-about
 cargo about generate --locked --fail -o THIRD-PARTY-NOTICES.md about.hbs
 ```
 
-Ship `THIRD-PARTY-NOTICES.md` and `LICENSE` with binary releases.
+Release archives built with [cargo-dist](https://github.com/axodotdev/cargo-dist)
+include `LICENSE`, `README.md`, `THIRD-PARTY-NOTICES.md`, and the original font
+license files under `licenses/fonts/`. This is configured by the `include` key
+in `dist-workspace.toml`; `LICENSE` and `README.md` are also auto-detected.
 
 ## License
 

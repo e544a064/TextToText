@@ -5,21 +5,24 @@ Text to Text is licensed under GPL-3.0-only; see [LICENSE](LICENSE).
 This file lists every third-party crate used to build Text to Text, the license
 each one is used under, and the full text of those licenses. It is generated
 with [cargo-about](https://github.com/EmbarkStudios/cargo-about) from
-`about.toml` and `about.hbs`, and should be shipped with binary releases.
+`about.toml` and `about.hbs`, and is shipped in every release archive.
 
 ## Bundled fonts
 
-egui embeds four fonts, each under its own license:
+This build embeds three fonts from egui, each under its own license:
 
 - **Ubuntu Light** — Copyright 2011 Canonical Ltd., licensed under the Ubuntu
   Font Licence 1.0.
-- **Noto Emoji** — Copyright 2013 Google Inc., All Rights Reserved, licensed
-  under the SIL Open Font License 1.1.
 - **Hack** — Copyright (c) 2018 Source Foundry Authors and Copyright (c) 2003
   Bitstream, Inc., licensed under the MIT License. Parts derived from Bitstream
   Vera are also subject to the Bitstream Vera License below.
-- **emoji-icon-font** — Copyright (c) 2014 John Slegers, licensed under the MIT
-  License.
+- **egui-icons** — a five-glyph subset of **emoji-icon-font**, Copyright (c)
+  2014 John Slegers, licensed under the MIT License.
+
+egui can also embed **Noto Emoji** (SIL Open Font License 1.1) and the full
+emoji-icon-font when its `monochrome_emoji_fonts` feature is enabled. That
+feature is off in this build, but the OFL and UFL texts are included below and
+in `licenses/fonts/` so the notices stay valid if it is turned on.
 
 The MIT, OFL, and UFL texts are reproduced with the other licenses below. The
 Bitstream Vera License follows.
