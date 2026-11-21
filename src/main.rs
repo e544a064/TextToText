@@ -6,9 +6,15 @@ use eframe::egui;
 use transform::Transform;
 
 fn main() -> eframe::Result<()> {
+	let icon = (
+		eframe::icon_data::from_png_bytes(include_bytes!("../assets/icon.png"))
+		. expect("Failed to load icon")
+	);
+
 	let options = eframe::NativeOptions {
 		viewport: (
 			egui::ViewportBuilder::default()
+			. with_icon(icon)
 			. with_title("Text to Text")
 			. with_inner_size([920.0, 800.0])
 			. with_min_inner_size([680.0, 520.0])

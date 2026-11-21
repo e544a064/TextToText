@@ -53,15 +53,28 @@ is written to `target/release/text-to-text` (`text-to-text.exe` on Windows).
 
 ```
 Cargo.toml
+build.rs              generates the Windows .ico from assets/icon.png
 about.toml            cargo-about configuration
 about.hbs             template for the third-party notices
 src/
   main.rs             App state, window layout, panels, and widgets
   transform.rs        Transform enum, transformation logic, unit tests
 assets/
+  icon.png            the single source image for the app icon
   screenshot.png
 THIRD-PARTY-NOTICES.md  generated dependency licenses
 ```
+
+## Icons
+
+`assets/icon.png` is the only icon source. At runtime, eframe sets it as the
+window icon on Windows, macOS, and X11. On Windows, `build.rs` additionally
+converts it into a multi-resolution `icon.ico` (16 to 256 px) in `OUT_DIR` and
+embeds that in the executable, so Explorer, shortcuts, and the taskbar show the
+icon without an `.ico` being checked in.
+
+Wayland does not let an application set its own window icon; there the
+compositor uses the icon from the `.desktop` entry, if one is installed.
 
 ## Adding a transformation
 

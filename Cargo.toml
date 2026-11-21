@@ -15,6 +15,10 @@ percent-encoding = "2"
 serde_json = { version = "1", features = ["preserve_order"] }
 uuid = { version = "1", features = ["v4"] }
 
+[build-dependencies]
+image = { version = "0.25", default-features = false, features = ["png", "ico"] }
+winresource = "0.1"
+
 [package.metadata.dist]
 dist = true
 
